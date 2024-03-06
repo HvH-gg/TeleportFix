@@ -21,7 +21,7 @@ public class TeleportFixConfig : BasePluginConfig
 public class TeleportFix : BasePlugin, IPluginConfig<TeleportFixConfig>
 {
     public override string ModuleName => "HvH.gg - Teleport/Crasher Fix";
-    public override string ModuleVersion => "1.0.0";
+    public override string ModuleVersion => "1.0.1";
     public override string ModuleAuthor => "imi-tat0r";
     
     public TeleportFixConfig Config { get; set; } = new();
@@ -59,11 +59,12 @@ public class TeleportFix : BasePlugin, IPluginConfig<TeleportFixConfig>
         var viewAngles = userCmd.GetViewAngles();
         
         // no valid view angles or not infinite
-        if (viewAngles is null || !viewAngles.IsInfinity()) 
+        if (viewAngles is null || (!viewAngles.IsInfinity() && !viewAngles.IsNaN())) 
             return HookResult.Continue;
         
         // fix the view angles (prevents the player from using teleport or airstuck)
         viewAngles.FixInfinity();
+        viewAngles.FixNaN();
 
         // not warned yet or last warning was more than 3 seconds ago
         if (_teleportBlockWarnings.TryGetValue(player.Index, out var lastWarningTime) &&
