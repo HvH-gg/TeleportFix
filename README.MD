@@ -1,4 +1,4 @@
-# HvH.gg Teleport/Crasher Fix (1.0.3)
+# HvH.gg Teleport/Crasher Fix (1.0.4)
 ![img](https://du.hurenso.hn/r/5DALK7.png)
 
 # About
@@ -6,7 +6,7 @@ CounterStrikeSharp plugin to fix the teleport/airstuck/crash exploit
 
 # Dependencies
 [Metamod:Source (2.x)](https://www.sourcemm.net/downloads.php/?branch=master)  
-[CounterStrikeSharp(v167)](https://github.com/roflmuffin/CounterStrikeSharp/releases)
+[CounterStrikeSharp(v228)](https://github.com/roflmuffin/CounterStrikeSharp/releases)
 
 # Installation
 1. Install Metamod:Source and CounterStrikeSharp

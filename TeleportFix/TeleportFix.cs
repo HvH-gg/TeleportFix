@@ -21,7 +21,7 @@ public class TeleportFixConfig : BasePluginConfig
 public class TeleportFix : BasePlugin, IPluginConfig<TeleportFixConfig>
 {
     public override string ModuleName => "HvH.gg - Teleport/Crasher Fix";
-    public override string ModuleVersion => "1.0.3";
+    public override string ModuleVersion => "1.0.4";
     public override string ModuleAuthor => "imi-tat0r";
     
     public TeleportFixConfig Config { get; set; } = new();
@@ -50,7 +50,7 @@ public class TeleportFix : BasePlugin, IPluginConfig<TeleportFixConfig>
     private HookResult OnRunCommand(DynamicHook h)
     {
         // check if the player is a valid player
-        var player = h.GetParam<CCSPlayer_MovementServices>(0).Pawn.Value.Controller.Value!.As<CCSPlayerController>();
+        var player = h.GetParam<CCSPlayer_MovementServices>(0).Pawn.Value.Controller.Value?.As<CCSPlayerController>();
         if (!player.IsPlayer())
             return HookResult.Continue;
         
