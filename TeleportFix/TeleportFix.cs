@@ -8,7 +8,8 @@ using CounterStrikeSharp.API.Modules.Admin;
 using CounterStrikeSharp.API.Modules.Commands;
 using CounterStrikeSharp.API.Modules.Memory.DynamicFunctions;
 using CounterStrikeSharp.API.Modules.Utils;
-using TeleportFix.Helpers;
+using CSSharpUtils.Extensions;
+using CSSharpUtils.Utils;
 
 namespace TeleportFix;
 
@@ -25,8 +26,6 @@ public class TeleportFix : BasePlugin, IPluginConfig<TeleportFixConfig>
     public override string ModuleAuthor => "imi-tat0r";
     
     public TeleportFixConfig Config { get; set; } = new();
-    private static readonly string AssemblyName = Assembly.GetExecutingAssembly().GetName().Name ?? "";
-    public static readonly string CfgPath = $"{Server.GameDirectory}/csgo/addons/counterstrikesharp/configs/plugins/{AssemblyName}/{AssemblyName}.json";
     
     public required MemoryFunctionVoid<CCSPlayer_MovementServices, IntPtr> RunCommand;
     private readonly Dictionary<uint, float> _teleportBlockWarnings = new();
@@ -66,13 +65,13 @@ public class TeleportFix : BasePlugin, IPluginConfig<TeleportFixConfig>
         viewAngles.Fix();
 
         // not warned yet or last warning was more than 3 seconds ago
-        if (_teleportBlockWarnings.TryGetValue(player.Index, out var lastWarningTime) &&
+        if (_teleportBlockWarnings.TryGetValue(player!.Index, out var lastWarningTime) &&
             !(lastWarningTime + 3 <= Server.CurrentTime)) 
             return HookResult.Changed;
         
         // print a warning to all players
         var feature = player.Pawn.Value!.As<CCSPlayerPawn>().OnGroundLastTick ? "teleport" : "airstuck";
-        Server.PrintToChatAll($"{Message.FormatMessage(Config.ChatPrefix)} Player {ChatColors.Red}{player.PlayerName}{ChatColors.Default} tried using {ChatColors.Red}{feature}{ChatColors.Default}!");
+        Server.PrintToChatAll($"{ChatUtils.FormatMessage(Config.ChatPrefix)} Player {ChatColors.Red}{player.PlayerName}{ChatColors.Default} tried using {ChatColors.Red}{feature}{ChatColors.Default}!");
         _teleportBlockWarnings[player.Index] = Server.CurrentTime;
 
         return HookResult.Changed;
@@ -83,11 +82,9 @@ public class TeleportFix : BasePlugin, IPluginConfig<TeleportFixConfig>
     [CommandHelper(minArgs: 0, whoCanExecute: CommandUsage.CLIENT_AND_SERVER)]
     public void OnReloadConfigCommand(CCSPlayerController? player, CommandInfo info)
     {
-        var config = File.ReadAllText(CfgPath);
         try
         {
-            OnConfigParsed(JsonSerializer.Deserialize<TeleportFixConfig>(config,
-                new JsonSerializerOptions { ReadCommentHandling = JsonCommentHandling.Skip })!);
+            OnConfigParsed(new TeleportFixConfig().Reload());
         }
         catch (Exception e)
         {
