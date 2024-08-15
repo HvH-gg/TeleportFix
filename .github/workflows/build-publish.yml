@@ -47,8 +47,24 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
 
-      - name: Publish artifacts
+      - name: Build
         run: dotnet build -c Release --no-restore /p:Version=${{ env.VERSION_NUMBER }}
+
+      - name: Find CSSharpUtils.dll
+        run: |
+          echo "Listing contents of NuGet packages directory"
+          find ~/.nuget/packages/cssharputils/ -name "CSSharpUtils.dll"
+
+      - name: Copy CSSharpUtils.dll
+        run: |
+          mkdir -p release/addons/counterstrikesharp/plugins/TeleportFix
+          # Assuming `find` step shows the exact path of CSSharpUtils.dll
+          CSSharpUtilsDllPath=$(find ~/.nuget/packages/cssharputils/ -name "CSSharpUtils.dll" | head -n 1)
+          if [ -z "$CSSharpUtilsDllPath" ]; then
+            echo "CSSharpUtils.dll not found. Exiting."
+            exit 1
+          fi
+          cp "$CSSharpUtilsDllPath" release/addons/counterstrikesharp/plugins/TeleportFix/
           
       - name: Check contents of bin/Release directory
         run: |
