@@ -8,7 +8,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="CounterStrikeSharp.API" Version="1.0.228" />
+      <PackageReference Include="CounterStrikeSharp.API" Version="1.0.255" PrivateAssets="all" />
+      <PackageReference Include="CSSharpUtils" Version="1.0.4"/>
     </ItemGroup>
 
+    <Target Name="CopySpecificAssemblies" AfterTargets="Build">
+        <!-- Copy the CSSharpUtils.dll to the desired directory -->
+        <Copy SourceFiles="$(UserProfile)\.nuget\packages\cssharputils\1.0.4\lib\net8.0\CSSharpUtils.dll" DestinationFolder="$(OutputPath)" />
+    </Target>
 </Project>
