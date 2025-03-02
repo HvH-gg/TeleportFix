@@ -1,4 +1,4 @@
-# [HvH.gg](https://hvh.gg) Teleport/Crasher Fix (1.0.6)
+# [HvH.gg](https://hvh.gg) Teleport/Crasher Fix (1.0.7)
 ![img](https://du.hurenso.hn/r/5DALK7.png)
 
 # About
