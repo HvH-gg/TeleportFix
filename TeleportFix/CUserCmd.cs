@@ -17,7 +17,7 @@ public class CUserCmd
         if (Handle == IntPtr.Zero)
             return null;
 
-        var baseCmd = Unsafe.Read<IntPtr>((void*)(Handle + 0x40));
+        var baseCmd = Unsafe.Read<IntPtr>((void*)(Handle + 0x30));
         if (baseCmd == IntPtr.Zero)
             return null;
 
