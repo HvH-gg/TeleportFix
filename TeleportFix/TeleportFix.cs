@@ -22,7 +22,7 @@ public class TeleportFixConfig : BasePluginConfig
 public class TeleportFix : BasePlugin, IPluginConfig<TeleportFixConfig>
 {
     public override string ModuleName => "HvH.gg - Teleport/Crasher Fix";
-    public override string ModuleVersion => "1.0.7";
+    public override string ModuleVersion => "1.1.0";
     public override string ModuleAuthor => "imi-tat0r";
     
     public TeleportFixConfig Config { get; set; } = new();
