@@ -1,12 +1,12 @@
-# [HvH.gg](https://hvh.gg) Teleport/Crasher Fix (1.1.0)
+# [HvH.gg](https://hvh.gg) Teleport/Crasher Fix (1.2.0)
 ![img](https://du.hurenso.hn/r/5DALK7.png)
 
 # About
-CounterStrikeSharp plugin to fix the teleport/airstuck/crash exploit
+CounterStrikeSharp plugin to fix the teleport/airstuck/crash exploit as well as Fake UP/Down AntiAim
 
 # Dependencies
 [Metamod:Source (2.x)](https://www.sourcemm.net/downloads.php/?branch=master)  
-[CounterStrikeSharp(v255)](https://github.com/roflmuffin/CounterStrikeSharp/releases)
+[CounterStrikeSharp(v362)](https://github.com/roflmuffin/CounterStrikeSharp/releases)
 
 # Installation
 1. Install Metamod:Source and CounterStrikeSharp
@@ -20,7 +20,8 @@ CounterStrikeSharp plugin to fix the teleport/airstuck/crash exploit
 ```json
 {
    "ChatPrefix": "[{Red}Hv{DarkRed}H{Default}.gg]",
-   "ConfigVersion": 1 // do not change
+   "PrintWarnings": true // if true, players will see a warning message in the chat when they try to teleport/airstuck or fake up/down
+   "ConfigVersion": 2 // do not change
 }
 ```
 

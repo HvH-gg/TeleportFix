@@ -16,13 +16,14 @@ namespace TeleportFix;
 public class TeleportFixConfig : BasePluginConfig
 {
     [JsonPropertyName("ChatPrefix")] public string ChatPrefix { get; set; } = "[{Red}Hv{DarkRed}H{Default}.gg]";
-    [JsonPropertyName("ConfigVersion")] public override int Version { get; set; } = 1;
+    [JsonPropertyName("PrintWarnings")] public bool PrintWarnings { get; set; } = true;
+    [JsonPropertyName("ConfigVersion")] public override int Version { get; set; } = 2;
 }
 
 public class TeleportFix : BasePlugin, IPluginConfig<TeleportFixConfig>
 {
     public override string ModuleName => "HvH.gg - Teleport/Crasher Fix";
-    public override string ModuleVersion => "1.1.0";
+    public override string ModuleVersion => "1.2.0";
     public override string ModuleAuthor => "imi-tat0r";
     
     public TeleportFixConfig Config { get; set; } = new();
@@ -36,7 +37,7 @@ public class TeleportFix : BasePlugin, IPluginConfig<TeleportFixConfig>
 
         Console.WriteLine("[HvH.gg] Hooking run command");
         
-        RunCommand = new(GameData.GetSignature("RunCommand"));
+        RunCommand = new MemoryFunctionVoid<CCSPlayer_MovementServices, IntPtr>(GameData.GetSignature("RunCommand"));
         RunCommand.Hook(OnRunCommand, HookMode.Pre);
     }
 
@@ -61,6 +62,9 @@ public class TeleportFix : BasePlugin, IPluginConfig<TeleportFixConfig>
         if (viewAngles is null || viewAngles.IsValid()) 
             return HookResult.Continue;
         
+        // false on super high angles, true on fake up/down
+        var isReasonable = viewAngles.IsReasonable();
+        
         // fix the view angles (prevents the player from using teleport or airstuck)
         viewAngles.Fix();
 
@@ -69,8 +73,11 @@ public class TeleportFix : BasePlugin, IPluginConfig<TeleportFixConfig>
             !(lastWarningTime + 3 <= Server.CurrentTime)) 
             return HookResult.Changed;
         
+        if (!Config.PrintWarnings)
+            return HookResult.Changed;
+        
         // print a warning to all players
-        var feature = player.Pawn.Value!.As<CCSPlayerPawn>().OnGroundLastTick ? "teleport" : "airstuck";
+        var feature = isReasonable ? "fake up/down" : player.Pawn.Value!.As<CCSPlayerPawn>().OnGroundLastTick ? "teleport" : "airstuck";
         Server.PrintToChatAll($"{ChatUtils.FormatMessage(Config.ChatPrefix)} Player {ChatColors.Red}{player.PlayerName}{ChatColors.Default} tried using {ChatColors.Red}{feature}{ChatColors.Default}!");
         _teleportBlockWarnings[player.Index] = Server.CurrentTime;
 
